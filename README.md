@@ -1,5 +1,9 @@
 # DreamEdit3D
 
+[Project page](https://www.jinxinai.org/dreamedit3d/) &nbsp;·&nbsp; [Video](https://youtu.be/PHyvbyREIOw)
+
+![DreamEdit3D teaser](assets/teaser.jpg)
+
 Text-driven editing of 3D assets from a single image. DreamEdit3D combines
 single-image concept extraction (Break-A-Scene), multi-view diffusion
 (MVDream), single-image-to-3D reconstruction (GTR), and SAM-based masking
