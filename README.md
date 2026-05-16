@@ -17,21 +17,20 @@ The end-to-end app lets you:
 ## Repository layout
 
 ```
-dreamedit3d_app.py        Main Gradio application (entry point)
-dreamedit3d.py            Core training logic (concept extraction)
-dreamedit3d_grad_accu.py  Variant with gradient accumulation
-gradio_app.py             Gradio UI components used by the main app
-train.py / inference.py   CLI training & inference (Break-A-Scene style)
-integrated_pipeline.py    CLI end-to-end pipeline
-mvdream/                  MVDream multi-view diffusion
-snap_gtr/                 GTR image-to-3D reconstruction
-segment-anything/         SAM (vendored)
-enhence_image/            Real-ESRGAN and SwinIR upscalers (vendored)
-mask/                     SAM-based masking helpers
-utils/                    Shared utilities (incl. GPT-4V auto-naming)
-scripts/                  Helper scripts
-examples/                 Example inputs
-docs/                     Developer notes and migration history
+dreamedit3d_app.py     Main Gradio application (entry point)
+dreamedit3d.py         Core training logic (per-view textual inversion)
+inference.py           CLI multi-view inference
+gradio_app.py          Gradio UI components used by the main app
+render_glb_blender.py  Headless Blender renderer for .glb assets
+ptp_utils.py           Prompt-to-prompt attention utilities
+mvdream/               MVDream multi-view diffusion
+snap_gtr/              GTR image-to-3D reconstruction
+segment-anything/      SAM (vendored)
+enhence_image/         Real-ESRGAN and SwinIR upscalers (vendored)
+mask/                  SAM-based masking helpers
+utils/                 Shared utilities (incl. GPT-4V auto-naming)
+examples/              Example inputs
+docs/                  Developer notes
 ```
 
 ## Installation
