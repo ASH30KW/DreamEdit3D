@@ -133,7 +133,7 @@ Simply don't set the `OPENAI_API_KEY` environment variable. The system will fall
 ## Technical Details
 
 - **Detection code**: `/utils/gpt_object_detector.py`
-- **Integration**: `/dreamedit3d_app.py` (lines ~3558-3573)
+- **Integration**: `/main.py` (lines ~3558-3573)
 - **How it works**:
   1. Applies mask to image (isolates object)
   2. Sends masked image to GPT-4o

@@ -20,4 +20,4 @@ echo "============================================================"
 echo "  Starting DreamEdit3D App"
 echo "============================================================"
 
-python dreamedit3d_app.py
+python main.py

@@ -16,7 +16,7 @@ The end-to-end app lets you:
 ## Repository layout
 
 ```
-dreamedit3d_app.py     Main Gradio application (entry point)
+main.py                Main Gradio application (entry point)
 dreamedit3d.py         Core training logic (per-view textual inversion)
 inference.py           CLI multi-view inference
 gradio_app.py          Gradio UI components used by the main app
@@ -120,7 +120,7 @@ pipeline still works.
 ```bash
 ./start_app.sh
 # or, equivalently:
-python dreamedit3d_app.py
+python main.py
 ```
 
 Then open the URL Gradio prints (default `http://localhost:7860`).
