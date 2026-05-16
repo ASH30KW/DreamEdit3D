@@ -147,23 +147,6 @@ examples/character/
 └── 04_gtr_3d/mesh.{glb,obj}       ← Stage 3 final output
 ```
 
-### Example results
-
-Running the command above on `examples/character` (text_input
-"a photo of person" → text_edit "a photo of person smile with teeth"):
-
-**Input — four SAM-segmented views:**
-
-![Input views](assets/results/character_input_4views.jpg)
-
-**Stage 2 output — multi-view sample under the edit prompt:**
-
-![Multi-view sample](assets/results/character_smile_4views.jpg)
-
-The exported textured mesh lands in
-`examples/character/04_gtr_3d/mesh.glb` (~4.4 MB) and `mesh.obj`
-(~12 MB) after the run.
-
 ### Options
 
 | Flag | Default | Meaning |
