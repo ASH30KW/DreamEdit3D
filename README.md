@@ -122,12 +122,15 @@ instead.
 
 ## Usage
 
-`main.py` runs the full pipeline end-to-end. The minimum invocation:
+`main.py` runs the full pipeline end-to-end. The exact command verified
+end-to-end on `examples/character` (RTX 3090, ~5 min, identity-preserving
+smile-with-teeth edit, textured GLB + OBJ mesh):
 
 ```bash
 python main.py \
   --example_dir examples/character \
-  --prompt "a photo of <asset0> smile with teeth"
+  --prompt "a photo of <asset0> smile with teeth" \
+  --initializer_token person
 ```
 
 The example dir must contain `01_sam_masks/view_1/img.jpg` + `mask0.png`,
