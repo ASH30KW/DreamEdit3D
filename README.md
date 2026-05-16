@@ -24,18 +24,24 @@ render_glb_blender.py  Headless Blender renderer for .glb assets
 ptp_utils.py           Prompt-to-prompt attention utilities
 mvdream/               MVDream multi-view diffusion
 snap_gtr/              GTR image-to-3D reconstruction
-segment-anything/      SAM (vendored)
+segment-anything/      SAM (git submodule of facebookresearch/segment-anything)
 mask/                  SAM-based masking helpers
 utils/                 Shared utilities (incl. GPT-4V auto-naming)
 examples/              Example inputs
-docs/                  Developer notes
 ```
 
 ## Installation
 
 Requires CUDA-capable GPU (tested on 48GB VRAM) and Linux.
-
 Tested on Linux with Python 3.10 and CUDA 12.8.
+
+Clone with submodules so the `segment-anything/` submodule is populated:
+
+```bash
+git clone --recurse-submodules https://github.com/ASH30KW/DreamEdit3D.git
+# or, on an existing clone:
+git submodule update --init --recursive
+```
 
 ### Option A — conda + pip (recommended)
 
@@ -81,7 +87,7 @@ yourself and place them as shown:
 | File | Location | Source |
 | --- | --- | --- |
 | `sd-v2.1-base-4view.pt` | `models/` | [MVDream release](https://github.com/bytedance/MVDream) |
-| `sam_vit_h_4b8939.pth` | `mask/checkpoints/` and `segment-anything/checkpoint/` | [SAM ViT-H](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) |
+| `sam_vit_h_4b8939.pth` | `mask/checkpoints/` | [SAM ViT-H](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) |
 | `sam_vit_l_0b3195.pth` *(optional)* | `mask/checkpoints/` | [SAM ViT-L](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth) |
 | `sam_vit_b_01ec64.pth` *(optional)* | `mask/checkpoints/` | [SAM ViT-B](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth) |
 | `full_checkpoint.pth` (GTR) | `snap_gtr/ckpts/` | [GTR release](https://github.com/snap-research/GTR) |
@@ -160,9 +166,6 @@ python inference.py \
   --num_frames 4 \
   --size 256
 ```
-
-See `docs/` for GPT-4V auto-naming and the project-based folder
-workflow.
 
 ## Acknowledgements
 

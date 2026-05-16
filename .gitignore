@@ -176,7 +176,6 @@ trained_models/
 
 # mask
 mask/checkpoints/
-segment-anything/checkpoint/
 
 examples/demo/thumbnails/*
 
