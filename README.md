@@ -23,7 +23,8 @@ gradio_app.py          Gradio UI components used by the main app
 render_glb_blender.py  Headless Blender renderer for .glb assets
 ptp_utils.py           Prompt-to-prompt attention utilities
 mvdream/               MVDream multi-view diffusion
-snap_gtr/              GTR image-to-3D reconstruction
+snap_gtr/              GTR image-to-3D (vendored, locally modified for
+                       transparent/RGBA mesh rendering)
 segment-anything/      SAM (git submodule of facebookresearch/segment-anything)
 mask/                  SAM-based masking helpers
 utils/                 Shared utilities (incl. GPT-4V auto-naming)
@@ -90,7 +91,7 @@ yourself and place them as shown:
 | `sam_vit_h_4b8939.pth` | `mask/checkpoints/` | [SAM ViT-H](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) |
 | `sam_vit_l_0b3195.pth` *(optional)* | `mask/checkpoints/` | [SAM ViT-L](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth) |
 | `sam_vit_b_01ec64.pth` *(optional)* | `mask/checkpoints/` | [SAM ViT-B](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth) |
-| `full_checkpoint.pth` (GTR) | `snap_gtr/ckpts/` | [GTR release](https://github.com/snap-research/GTR) |
+| `full_checkpoint.pth` (GTR) | `snap_gtr/ckpts/` | [GTR release](https://github.com/snap-research/snap_gtr) |
 
 ### Stable Diffusion 2.1 base
 
@@ -169,12 +170,12 @@ python inference.py \
 
 ## Acknowledgements
 
-DreamEdit3D builds on, and vendors source from, these projects:
+DreamEdit3D builds on, and includes source from, these projects:
 
 - [Break-A-Scene](https://github.com/google/break-a-scene) (Avrahami et al., SIGGRAPH Asia 2023) — concept extraction
 - [MVDream](https://github.com/bytedance/MVDream) — multi-view diffusion
-- [GTR / snap_gtr](https://github.com/snap-research/GTR) — image-to-3D
-- [Segment Anything](https://github.com/facebookresearch/segment-anything) — masking
+- [GTR / snap_gtr](https://github.com/snap-research/snap_gtr) — image-to-3D (vendored with local modifications)
+- [Segment Anything](https://github.com/facebookresearch/segment-anything) — masking (git submodule)
 
 Please cite the underlying papers when using this code.
 
