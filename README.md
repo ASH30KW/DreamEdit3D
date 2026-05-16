@@ -118,8 +118,6 @@ pipeline still works.
 ### Launch the app
 
 ```bash
-./start_app.sh
-# or, equivalently:
 python main.py
 ```
 
