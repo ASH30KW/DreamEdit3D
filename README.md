@@ -1,13 +1,20 @@
-# DreamEdit3D
+# DreamEdit3D: Personalization of Multi-View Diffusion Models for 3D Editing
+
+**Jinxin Ai · Matthias Nießner · Ziya Erkoç**
+Technical University of Munich
 
 [Project page](https://www.jinxinai.org/dreamedit3d/) &nbsp;·&nbsp; [Video](https://youtu.be/PHyvbyREIOw)
 
 ![DreamEdit3D teaser](assets/teaser.jpg)
 
-Text-driven editing of 3D assets from a single image. DreamEdit3D combines
-single-image concept extraction (Break-A-Scene), multi-view diffusion
-(MVDream), single-image-to-3D reconstruction (GTR), and SAM-based masking
-into one Gradio pipeline.
+DreamEdit3D produces multi-view-consistent edits of 3D objects guided by
+natural language. We personalize a multi-view diffusion model to preserve
+input identity, then generate diverse edits by composing learned token
+embeddings with editing prompts.
+
+Pipeline: SAM-based per-view object segmentation → multi-view textual
+inversion + fine-tuning of MVDream (Break-A-Scene-style training) →
+multi-view image generation → GTR lifts the views to a textured 3D mesh.
 
 The end-to-end app lets you:
 
@@ -189,12 +196,12 @@ Please cite the underlying papers when using this code.
 If you use DreamEdit3D in your work, please cite it as:
 
 ```bibtex
-@misc{ai2026dreamedit3d,
-  title  = {DreamEdit3D: Text-driven Editing of 3D Assets from a Single Image},
-  author = {Ai, Jinxin},
-  year   = {2026},
-  howpublished = {\url{https://www.jinxinai.org/dreamedit3d/}},
-  note   = {Code: \url{https://github.com/ASH30KW/DreamEdit3D}}
+@inproceedings{ai2026dreamedit3d,
+  title     = {DreamEdit3D: Personalization of Multi-View Diffusion Models for 3D Editing},
+  author    = {Ai, Jinxin and Nie{\ss}ner, Matthias and Erko{\c{c}}, Ziya},
+  booktitle = {European Conference on Computer Vision (ECCV)},
+  year      = {2026},
+  note      = {Project page: \url{https://www.jinxinai.org/dreamedit3d/}, Code: \url{https://github.com/ASH30KW/DreamEdit3D}}
 }
 ```
 
