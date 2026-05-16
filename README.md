@@ -180,17 +180,6 @@ python inference.py \
   --size 256
 ```
 
-## Acknowledgements
-
-DreamEdit3D builds on, and includes source from, these projects:
-
-- [Break-A-Scene](https://github.com/google/break-a-scene) (Avrahami et al., SIGGRAPH Asia 2023) — concept extraction
-- [MVDream](https://github.com/bytedance/MVDream) — multi-view diffusion
-- [GTR / snap_gtr](https://github.com/snap-research/snap_gtr) — image-to-3D (git submodule of [our fork](https://github.com/ASH30KW/snap_gtr/tree/dreamedit3d) with transparent/RGBA rendering)
-- [Segment Anything](https://github.com/facebookresearch/segment-anything) — masking (git submodule)
-
-Please cite the underlying papers when using this code.
-
 ## Citation
 
 If you use DreamEdit3D in your work, please cite it as:
