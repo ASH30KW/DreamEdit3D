@@ -29,12 +29,9 @@ prompt, and produces a textured 3D mesh:
 main.py                       End-to-end CLI (the only root .py)
 scripts/
 ├── train.py                  Multi-view textual-inversion training
-├── inference.py              Multi-view image sampler from trained MVDream
-└── render_glb_blender.py     Headless Blender renderer for .glb assets
+└── inference.py              Multi-view image sampler from trained MVDream
 utils/
-├── ptp_utils.py              Image-grid + attention-store helpers used during training
-├── gpt_object_detector.py    GPT-4V auto-naming of mask concepts (helper)
-└── unified_renderer.py       Multi-view render utilities
+└── ptp_utils.py              Image-grid + attention-store helpers used during training
 mvdream/                      MVDream multi-view diffusion (vendored)
 snap_gtr/                     GTR image-to-3D (git submodule of
                               ASH30KW/snap_gtr@dreamedit3d, our fork with
