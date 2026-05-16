@@ -154,12 +154,12 @@ The `instance_data_dir` should contain `view_1/`, `view_2/`, ...,
 ```bash
 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python scripts/train.py \
   --pretrained_model_name_or_path sd-research/stable-diffusion-2-1-base \
-  --instance_data_dir projects/14_human_smile_with_teeth/01_sam_masks \
+  --instance_data_dir examples/character/01_sam_masks \
   --num_of_assets 1 \
   --initializer_tokens person \
   --phase1_train_steps 400 \
   --phase2_train_steps 400 \
-  --output_dir projects/14_human_smile_with_teeth/02_train \
+  --output_dir projects/character/02_train \
   --no_prior_preservation \
   --use_8bit_adam \
   --set_grads_to_none \
@@ -176,9 +176,9 @@ Verified end-to-end on an RTX 3090 with a reduced 50+50-step run
 
 ```bash
 python scripts/inference.py \
-  --model_path projects/14_human_smile_with_teeth/02_train \
+  --model_path projects/character/02_train \
   --prompt "a photo of <asset0> smile with teeth" \
-  --output_path projects/14_human_smile_with_teeth/03_inference.jpg \
+  --output_path projects/character/03_inference.jpg \
   --num_frames 4 \
   --size 256
 ```
