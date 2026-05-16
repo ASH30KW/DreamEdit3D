@@ -199,12 +199,12 @@ Please cite the underlying papers when using this code.
 If you use DreamEdit3D in your work, please cite it as:
 
 ```bibtex
-@inproceedings{ai2026dreamedit3d,
-  title     = {DreamEdit3D: Personalization of Multi-View Diffusion Models for 3D Editing},
-  author    = {Ai, Jinxin and Nie{\ss}ner, Matthias and Erko{\c{c}}, Ziya},
-  booktitle = {European Conference on Computer Vision (ECCV)},
-  year      = {2026},
-  note      = {Project page: \url{https://www.jinxinai.org/dreamedit3d/}, Code: \url{https://github.com/ASH30KW/DreamEdit3D}}
+@article{ai2026dreamedit3d,
+  title     = {DreamEdit3D: Personalization of Multi-View
+               Diffusion Models for 3D Editing},
+  author    = {Ai, Jinxin and Nie{\ss}ner, Matthias and Erko\c{c}, Ziya},
+  journal   = {arXiv preprint},
+  year      = {2026}
 }
 ```
 
