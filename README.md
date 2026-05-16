@@ -38,21 +38,39 @@ docs/                     Developer notes and migration history
 
 Requires CUDA-capable GPU (tested on 48GB VRAM) and Linux.
 
+Tested on Linux with Python 3.10 and CUDA 12.8.
+
 ### Option A — conda + pip (recommended)
 
 ```bash
 conda create -n DreamEdit3D python=3.10 -y
 conda activate DreamEdit3D
-pip install -r requirements.txt
+
+# 1. PyTorch first, so torch-extension builds can find it later
+pip install torch==2.8.0 torchvision==0.23.0+cu128 \
+    --extra-index-url https://download.pytorch.org/whl/cu128
+
+# 2. Everything else
+pip install -r requirements.txt \
+    --extra-index-url https://download.pytorch.org/whl/cu128
+
+# 3. Torch-extension packages (require nvcc 12.x and torch already
+#    installed; install the CUDA toolkit first if you don't have it)
+conda install -c nvidia cuda-toolkit=12.8 -y
+pip install --no-build-isolation diso==0.1.4
+pip install --no-build-isolation \
+    "nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git@v0.3.3"
+pip install --no-build-isolation \
+    "pytorch3d @ git+https://github.com/facebookresearch/pytorch3d.git@V0.7.7"
 ```
 
 `requirements.txt` is a frozen snapshot of the working environment.
-PyTorch is pinned to a CUDA 12.8 build; adjust the torch line for your
-CUDA version if needed.
+Adjust the `+cu128` markers and `--extra-index-url` if you target a
+different CUDA version.
 
 ### Option B — clone an existing conda env
 
-If you have the original `sam-bas-gtr` env on the same machine:
+If you already have the original `sam-bas-gtr` env on the same machine:
 
 ```bash
 conda create --clone sam-bas-gtr --name DreamEdit3D
@@ -72,6 +90,20 @@ yourself and place them as shown:
 | `full_checkpoint.pth` (GTR) | `snap_gtr/ckpts/` | [GTR release](https://github.com/snap-research/GTR) |
 | `RealESRGAN_x2plus.pth`, `RealESRGAN_x4plus.pth` | `enhence_image/Real-ESRGAN/weights/` | [Real-ESRGAN releases](https://github.com/xinntao/Real-ESRGAN/releases) |
 | SwinIR model zoo *(optional)* | `enhence_image/SwinIR/model_zoo/swinir/` | [SwinIR releases](https://github.com/JingyunLiang/SwinIR/releases) |
+
+### Stable Diffusion 2.1 base
+
+The training and inference scripts also need Stable Diffusion 2.1 base,
+which is fetched from HuggingFace on first run. Stability AI removed
+the original `stabilityai/stable-diffusion-2-1-base` repo, so pass a
+public mirror via `--pretrained_model_name_or_path`:
+
+```bash
+--pretrained_model_name_or_path sd-research/stable-diffusion-2-1-base
+```
+
+If you have an existing local SD2.1 pipeline dump, point at that path
+instead.
 
 ## Configuration
 
@@ -98,31 +130,42 @@ python dreamedit3d_app.py
 
 Then open the URL Gradio prints (default `http://localhost:7860`).
 
-### CLI: train a single concept
+### CLI: train a single concept (4-view)
+
+The `instance_data_dir` should contain `view_1/`, `view_2/`, ...,
+`view_N/` subdirectories, each with `img.jpg` and per-asset mask files
+(`mask0.png`, `mask1.png`, ...).
 
 ```bash
 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python dreamedit3d.py \
-  --instance_data_dir examples/race-chicken \
+  --pretrained_model_name_or_path sd-research/stable-diffusion-2-1-base \
+  --instance_data_dir projects/14_human_smile_with_teeth/01_sam_masks \
   --num_of_assets 1 \
-  --initializer_tokens head \
-  --class_data_dir inputs/data_dir \
+  --initializer_tokens person \
   --phase1_train_steps 400 \
   --phase2_train_steps 400 \
-  --output_dir outputs/race-chicken \
+  --output_dir projects/14_human_smile_with_teeth/02_train \
+  --no_prior_preservation \
   --use_8bit_adam \
   --set_grads_to_none \
-  --resolution 128 \
-  --size 64 \
-  --num_frames 1
+  --resolution 256 \
+  --size 128 \
+  --num_frames 4 \
+  --mvdream_training_mode 2d
 ```
+
+Verified end-to-end on an RTX 3090 with a reduced 50+50-step run
+(~26 s training, ~3 s inference); use 400+400 for production quality.
 
 ### CLI: inference
 
 ```bash
 python inference.py \
-  --model_path outputs/race-chicken \
-  --prompt "a photo of <asset0>" \
-  --output_path outputs/result.jpg
+  --model_path projects/14_human_smile_with_teeth/02_train \
+  --prompt "a photo of <asset0> smile with teeth" \
+  --output_path projects/14_human_smile_with_teeth/03_inference.jpg \
+  --num_frames 4 \
+  --size 256
 ```
 
 See `docs/` for joint multi-view training, the project-based folder

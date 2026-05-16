@@ -1,3 +1,29 @@
+# DreamEdit3D Python dependencies (frozen from a working env on Python 3.10, CUDA 12.8).
+#
+# Tested install procedure (also documented in README.md):
+#
+#   conda create -n DreamEdit3D python=3.10 -y
+#   conda activate DreamEdit3D
+#
+#   # 1. PyTorch first, so torch-extension builds can find it
+#   pip install torch==2.8.0 torchvision==0.23.0+cu128 \
+#       --extra-index-url https://download.pytorch.org/whl/cu128
+#
+#   # 2. Everything else
+#   pip install -r requirements.txt \
+#       --extra-index-url https://download.pytorch.org/whl/cu128
+#
+#   # 3. Torch-extension packages that need the CUDA toolkit and torch
+#   #    present at build time (requires nvcc >= 12.x; install via:
+#   #    conda install -c nvidia cuda-toolkit=12.8)
+#   pip install --no-build-isolation diso==0.1.4
+#   pip install --no-build-isolation \
+#       "nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git@v0.3.3"
+#   pip install --no-build-isolation \
+#       "pytorch3d @ git+https://github.com/facebookresearch/pytorch3d.git@V0.7.7"
+#
+# Adjust the +cu128 markers and the index URL if you target a different CUDA version.
+
 accelerate==0.19.0
 addict==2.4.0
 aiofiles==23.2.1
@@ -19,21 +45,19 @@ Brotli==1.1.0
 certifi==2025.10.5
 charset-normalizer==3.4.4
 click==8.3.0
-clip @ git+https://github.com/openai/CLIP.git@dcba3cb2e2827b402d2701e7e1c7d9fed8a20ef1
-colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1733218098505/work
-coloredlogs @ file:///home/conda/feedstock_root/build_artifacts/coloredlogs_1733927977068/work
+clip @ git+https://github.com/openai/CLIP.git
+colorama==0.4.6
+coloredlogs==15.0.1
 comm==0.2.3
 ConfigArgParse==1.7.1
 contourpy==1.3.2
 cycler==0.12.1
 dash==3.2.0
-dataclasses @ file:///home/conda/feedstock_root/build_artifacts/dataclasses_1628958434797/work
 datasets==2.12.0
 decorator==5.2.1
 defusedxml==0.7.1
 diffusers==0.12.1
 dill==0.3.6
-diso==0.1.4
 distro==1.9.0
 einops==0.8.0
 exceptiongroup==1.3.0
@@ -44,16 +68,16 @@ fastjsonschema==2.21.2
 ffmpy==0.6.4
 filelock==3.20.0
 Flask==3.1.2
-flatbuffers @ file:///home/conda/feedstock_root/build_artifacts/python-flatbuffers_1739279199749/work
+flatbuffers==25.2.10
 fonttools==4.60.1
 fpdf2==2.8.5
 freetype-py==2.5.1
 frozenlist==1.8.0
-fsspec @ file:///home/conda/feedstock_root/build_artifacts/fsspec_1756908513222/work
+fsspec==2025.9.0
 ftfy==6.3.1
-fvcore @ file:///home/conda/feedstock_root/build_artifacts/fvcore_1671623667463/work
+fvcore==0.1.5.post20221221
 gdown==5.2.0
-gmpy2 @ file:///home/conda/feedstock_root/build_artifacts/gmpy2_1756739567949/work
+gmpy2==2.2.1
 GPUtil==1.4.0
 gradio==4.19.2
 gradio_client==0.10.1
@@ -64,19 +88,19 @@ hf-xet==1.2.0
 httpcore==1.0.9
 httpx==0.28.1
 huggingface-hub==0.20.3
-humanfriendly @ file:///home/conda/feedstock_root/build_artifacts/humanfriendly_1733927922002/work
+humanfriendly==10.0
 idna==3.11
 imageio==2.33.1
 imageio-ffmpeg==0.4.9
 importlib_metadata==8.7.0
 importlib_resources==6.5.2
-iopath @ file:///home/conda/feedstock_root/build_artifacts/iopath_1723846728822/work
+iopath==0.1.10
 ipython==8.37.0
 ipywidgets==8.1.7
 itsdangerous==2.2.0
 jaxtyping==0.2.25
 jedi==0.19.2
-Jinja2 @ file:///home/conda/feedstock_root/build_artifacts/jinja2_1741263328855/work
+Jinja2==3.1.6
 jiter==0.12.0
 joblib==1.5.2
 jsonschema==4.25.1
@@ -90,23 +114,22 @@ linkify-it-py==2.0.3
 llvmlite==0.44.0
 loguru==0.7.2
 lpips==0.1.4
-markdown-it-py==4.0.0
+markdown-it-py==2.2.0
 MarkupSafe==2.1.5
 matplotlib==3.10.7
 matplotlib-inline==0.1.7
 mdit-py-plugins==0.3.3
 mdurl==0.1.2
-mpmath @ file:///home/conda/feedstock_root/build_artifacts/mpmath_1733302684489/work
+mpmath==1.3.0
 multidict==6.7.0
 multiprocess==0.70.14
 narwhals==2.10.0
 nbformat==5.10.4
 nest-asyncio==1.6.0
-networkx @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_networkx_1731521053/work
+networkx==3.4.2
 ninja==1.11.1.3
 numba==0.61.2
-numpy @ file:///home/conda/feedstock_root/build_artifacts/numpy_1707225380409/work/dist/numpy-1.26.4-cp310-cp310-linux_x86_64.whl#sha256=51131fd8fc130cd168aecaf1bc0ea85f92e8ffebf211772ceb16ac2e7f10d7ca
-nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git@729261dc64c4241ea36efda84fbf532cc8b425b8
+numpy==1.26.4
 nvidia-cublas-cu12==12.8.4.1
 nvidia-cuda-cupti-cu12==12.8.90
 nvidia-cuda-nvrtc-cu12==12.8.93
@@ -123,32 +146,33 @@ nvidia-nvjitlink-cu12==12.8.93
 nvidia-nvtx-cu12==12.8.90
 objaverse==0.1.7
 omegaconf==2.3.0
-onnxruntime-gpu @ file:///home/conda/feedstock_root/build_artifacts/onnxruntime_1746973237048/work/build-ci/Release/dist/onnxruntime_gpu-1.22.0-cp310-cp310-linux_x86_64.whl#sha256=b5833dbdc5e2553bb969f788479a7e653acd66d1d924539dc7fb747b82551e97
+onnxruntime-gpu==1.22.0
 open-clip-torch==2.0.0
 open3d==0.18.0
 openai==2.8.1
-opencv-python==4.12.0.88
+opencv-python==4.10.0.84
 opencv-python-headless==4.8.0.74
-optree @ file:///home/conda/feedstock_root/build_artifacts/optree_1756812119096/work
+optree==0.17.0
 orjson==3.11.4
-packaging @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_packaging_1745345660/work
+packaging==25.0
 pandas==1.5.3
 parso==0.8.5
 pexpect==4.9.0
 pillow==10.4.0
+pip==25.2
 platformdirs==4.4.0
 plotly==6.3.0
 pooch==1.8.2
-portalocker @ file:///home/conda/feedstock_root/build_artifacts/portalocker_1749926745768/work
+portalocker==3.2.0
 prompt_toolkit==3.0.52
 propcache==0.4.1
-protobuf @ file:///home/conda/feedstock_root/build_artifacts/protobuf_1751668305329/work/bazel-bin/python/dist/protobuf-6.31.1-cp310-abi3-linux_x86_64.whl#sha256=defdfb61601fe45e5f630c511e9db761b2d454cda73e7e10af9b4112431a5435
+protobuf==6.31.1
 psutil==7.1.2
 ptyprocess==0.7.0
 pure_eval==0.2.3
 pyarrow==11.0.0
-pybind11 @ file:///D:/bld/bld/rattler-build_pybind11_1755953378/work
-pybind11-global @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_pybind11-global_1755953338/work
+pybind11==3.0.1
+pybind11-global==3.0.1
 pycocotools==2.0.10
 pydantic==2.12.3
 pydantic_core==2.41.4
@@ -162,10 +186,9 @@ pyparsing==3.2.5
 pyquaternion==0.9.9
 pyrender==0.1.45
 PySocks==1.7.1
-python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_python-dateutil_1751104122/work
+python-dateutil==2.9.0.post0
 python-multipart==0.0.20
-pytorch3d @ file:///home/conda/feedstock_root/build_artifacts/pytorch3d_1753511811154/work
-pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1742920838005/work
+pytz==2025.2
 PyYAML==6.0.3
 referencing==0.37.0
 regex==2025.10.23
@@ -183,16 +206,17 @@ scikit-learn==1.7.1
 scipy==1.15.3
 segment-anything==1.0
 semantic-version==2.10.0
+setuptools==80.9.0
 shellingham==1.5.4
-six @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_six_1753199211/work
+six==1.17.0
 sniffio==1.3.1
 soupsieve==2.8
 stack-data==0.6.3
 starlette==0.49.0
 supervision==0.27.0
-sympy @ file:///home/conda/feedstock_root/build_artifacts/sympy_1745946051654/work
-tabulate @ file:///home/conda/feedstock_root/build_artifacts/tabulate_1733589744265/work
-termcolor @ file:///home/conda/feedstock_root/build_artifacts/termcolor_1746039537955/work
+sympy==1.14.0
+tabulate==0.9.0
+termcolor==3.1.0
 threadpoolctl==3.6.0
 tifffile==2025.5.10
 timm==1.0.21
@@ -202,8 +226,8 @@ tomlkit==0.12.0
 torch==2.8.0
 torchmetrics==1.2.1
 torchvision==0.23.0+cu128
-torchvision-extra-decoders @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_torchvision-extra-decoders_1748570840/work
-tqdm @ file:///home/conda/feedstock_root/build_artifacts/tqdm_1735661334605/work
+torchvision-extra-decoders==0.0.2
+tqdm==4.67.1
 traitlets==5.14.3
 transformers==4.28.1
 trimesh==4.0.5
@@ -211,19 +235,20 @@ triton==3.4.0
 typeguard==2.13.3
 typer==0.20.0
 typer-slim==0.20.0
+typing_extensions==4.15.0
 typing-inspection==0.4.2
-typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_typing_extensions_1756220668/work
-tzdata @ file:///home/conda/feedstock_root/build_artifacts/python-tzdata_1742745135198/work
+tzdata==2025.2
 uc-micro-py==1.0.3
 urllib3==2.5.0
 uvicorn==0.38.0
 wcwidth==0.2.13
 websockets==11.0.3
 Werkzeug==3.1.3
+wheel==0.45.1
 widgetsnbextension==4.0.14
 xformers==0.0.32.post2
 xxhash==3.6.0
-yacs @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_yacs_1737043264/work
+yacs==0.1.8
 yapf==0.43.0
 yarl==1.22.0
 zipp==3.23.0
