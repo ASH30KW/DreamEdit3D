@@ -20,11 +20,16 @@ import itertools
 import logging
 import math
 import os
+import sys
 import warnings
 from pathlib import Path
 from typing import List, Optional
 import random
 import time
+
+# Make repo root importable when this script is invoked as
+# `python scripts/train.py ...` so that mvdream/ and utils/ resolve.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import torch
 import torch.nn.functional as F
@@ -63,8 +68,8 @@ from PIL import Image
 from torchvision import transforms
 from tqdm.auto import tqdm
 from transformers import AutoTokenizer, PretrainedConfig
-import ptp_utils
-from ptp_utils import AttentionStore
+from utils import ptp_utils
+from utils.ptp_utils import AttentionStore
 from diffusers.models.cross_attention import CrossAttention
 
 # MVDream imports

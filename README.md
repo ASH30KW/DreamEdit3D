@@ -27,20 +27,23 @@ The end-to-end app lets you:
 ## Repository layout
 
 ```
-main.py                Main Gradio application (entry point)
-dreamedit3d.py         Core training logic (per-view textual inversion)
-inference.py           CLI multi-view inference
-gradio_app.py          Gradio UI components used by the main app
-render_glb_blender.py  Headless Blender renderer for .glb assets
-ptp_utils.py           Prompt-to-prompt attention utilities
-mvdream/               MVDream multi-view diffusion
-snap_gtr/              GTR image-to-3D (git submodule of
-                       ASH30KW/snap_gtr@dreamedit3d, our fork with
-                       transparent/RGBA rendering support)
-segment-anything/      SAM (git submodule of facebookresearch/segment-anything)
-mask/                  SAM-based masking helpers
-utils/                 Shared utilities (incl. GPT-4V auto-naming)
-examples/              Example inputs
+main.py                       Gradio application (entry point — only root .py)
+scripts/
+├── train.py                  Per-view textual-inversion training (subprocess)
+├── inference.py              Multi-view image sampler from trained MVDream (subprocess)
+└── render_glb_blender.py     Headless Blender renderer for .glb assets (Blender subprocess)
+utils/
+├── pipeline.py               DreamEdit3DApp orchestration class used by main.py
+├── gpt_object_detector.py    GPT-4V auto-naming of mask concepts
+├── unified_renderer.py       Multi-view render utilities
+└── ptp_utils.py              Image-grid helpers + attention-store for training
+mvdream/                      MVDream multi-view diffusion (vendored)
+snap_gtr/                     GTR image-to-3D (git submodule of
+                              ASH30KW/snap_gtr@dreamedit3d, our fork with
+                              transparent/RGBA rendering support)
+segment-anything/             SAM (git submodule of facebookresearch/segment-anything)
+mask/                         SAM checkpoints (runtime, gitignored)
+examples/                     Example inputs
 ```
 
 ## Installation
@@ -149,7 +152,7 @@ The `instance_data_dir` should contain `view_1/`, `view_2/`, ...,
 (`mask0.png`, `mask1.png`, ...).
 
 ```bash
-PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python dreamedit3d.py \
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python scripts/train.py \
   --pretrained_model_name_or_path sd-research/stable-diffusion-2-1-base \
   --instance_data_dir projects/14_human_smile_with_teeth/01_sam_masks \
   --num_of_assets 1 \
@@ -172,7 +175,7 @@ Verified end-to-end on an RTX 3090 with a reduced 50+50-step run
 ### CLI: inference
 
 ```bash
-python inference.py \
+python scripts/inference.py \
   --model_path projects/14_human_smile_with_teeth/02_train \
   --prompt "a photo of <asset0> smile with teeth" \
   --output_path projects/14_human_smile_with_teeth/03_inference.jpg \

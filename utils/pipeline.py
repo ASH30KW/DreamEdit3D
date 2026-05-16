@@ -14,8 +14,8 @@ os.environ['MKL_THREADING_LAYER'] = 'GNU'
 
 class DreamEdit3DApp:
     def __init__(self):
-        # Use absolute paths based on the location of this file
-        self.base_dir = Path(__file__).resolve().parent
+        # Repo root = utils/pipeline.py -> .. -> repo
+        self.base_dir = Path(__file__).resolve().parent.parent
 
         # These are now set per-project, not created globally
         self.temp_dir = None
@@ -118,7 +118,7 @@ class DreamEdit3DApp:
 
             # Build training command using dreamedit3d.py with memory optimization
             # Use absolute paths for all directories
-            dreamedit3d_script = self.base_dir / "dreamedit3d.py"
+            dreamedit3d_script = self.base_dir / "scripts" / "train.py"
 
             # Detect if training_dir has multi-view structure
             training_path = Path(training_dir)
@@ -318,7 +318,7 @@ class DreamEdit3DApp:
             output_path = generated_dir / filename
 
             # Build inference command using absolute path
-            inference_script = self.base_dir / "inference.py"
+            inference_script = self.base_dir / "scripts" / "inference.py"
             cmd = [
                 sys.executable, str(inference_script),
                 "--model_path", model_path,

@@ -16,6 +16,13 @@ limitations under the License.
 
 import argparse
 import os
+import sys
+from pathlib import Path
+
+# Make repo root importable when this script is invoked as
+# `python scripts/inference.py ...` so that mvdream/ resolves.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 import torch
 import numpy as np
 from PIL import Image

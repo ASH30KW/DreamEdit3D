@@ -19,8 +19,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-# Import DreamEdit3DApp from same directory
-from gradio_app import DreamEdit3DApp
+# Import DreamEdit3DApp orchestration helper
+from utils.pipeline import DreamEdit3DApp
 
 # Import GPT-4V object detector for automatic concept naming
 from utils.gpt_object_detector import detect_concept_names_batch
@@ -3802,7 +3802,7 @@ def create_interface():
                     # Render using Blender
                     temp_output_dir = tempfile.mkdtemp()
                     blender_path = shutil.which("blender") or "/snap/blender/current/blender"
-                    script_path = Path(__file__).parent / "render_glb_blender.py"
+                    script_path = Path(__file__).parent / "scripts" / "render_glb_blender.py"
 
                     cmd = [
                         blender_path,
