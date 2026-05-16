@@ -201,7 +201,6 @@ examples/*/03_multiview_images/
 examples/*/04_gtr_3d/
 examples/*/04_gtr_prepared/
 examples/*/05_evaluation/
-examples/*/separated_views/
 
 # Secrets / local config
 .env

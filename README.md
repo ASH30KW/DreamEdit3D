@@ -20,7 +20,7 @@ The end-to-end app lets you:
 
 1. Upload an image and segment it into concepts with SAM (optionally
    auto-named with GPT-4V).
-2. Train per-concept textual tokens (`<asset0>`, `<asset1>`, ...).
+2. Train a textual token (`<asset0>`) that represents the object.
 3. Re-render the concepts under new prompts as multi-view images via
    MVDream, then lift them to a 3D mesh with GTR.
 
