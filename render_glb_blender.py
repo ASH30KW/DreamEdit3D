@@ -8,7 +8,7 @@ import sys
 import os
 import math
 from pathlib import Path
-from mathutils import Vector, Matrix
+from mathutils import Vector
 
 # Get arguments after '--'
 argv = sys.argv

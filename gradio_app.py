@@ -2,10 +2,7 @@ import gradio as gr
 import os
 import subprocess
 import sys
-import shutil
 from pathlib import Path
-import tempfile
-import zipfile
 from PIL import Image
 import json
 import time
@@ -161,28 +158,6 @@ class DreamEdit3DApp:
                 output_dir = self.models_dir / f"model_{timestamp}"
             output_dir.mkdir(parents=True, exist_ok=True)
 
-            # # Class data dir
-            # class_data_dir = self.temp_dir / "class_data"
-            # class_data_dir.mkdir(parents=True, exist_ok=True)
-
-            # progress(0.1, desc="Starting training...")
-
-            # # Build training command
-            # cmd = [
-            #     sys.executable, "train.py",
-            #     "--instance_data_dir", str(training_dir),
-            #     "--num_of_assets", str(num_concepts),
-            #     "--class_data_dir", str(class_data_dir),
-            #     "--phase1_train_steps", str(phase1_steps),
-            #     "--phase2_train_steps", str(phase2_steps),
-            #     "--output_dir", str(output_dir),
-            #     "--use_8bit_adam",
-            #     "--set_grads_to_none"
-            # ]
-            # if use_init_tokens:
-            #     cmd.extend(["--initializer_tokens"] + initializer_tokens)
-
-
             # Require initializer tokens to match number of masks
             initializer_tokens = [t.strip() for t in concept_names.split(",") if t.strip()] if concept_names else []
             if len(initializer_tokens) != num_concepts:
@@ -256,15 +231,6 @@ class DreamEdit3DApp:
                 logf.write("OMP_NUM_THREADS=1\n\n")
                 logf.flush()
 
-                # process = subprocess.Popen(
-                #     cmd,
-                #     stdout=subprocess.PIPE,
-                #     stderr=subprocess.STDOUT,  # merge
-                #     text=True,
-                #     bufsize=1,
-                #     universal_newlines=True,
-                #     env=env  # Pass the fixed environment
-                # )
                 repo_root = Path(__file__).resolve().parent  # ensure relative paths match CLI
 
                 # Add PYTHONPATH to ensure proper module loading

@@ -3,7 +3,6 @@ import numpy as np
 import cv2
 from PIL import Image, ImageDraw, ImageFilter
 import torch
-import matplotlib.pyplot as plt
 import io
 import base64
 import os
@@ -51,7 +50,7 @@ except ImportError as e:
     GPTEVAL_AVAILABLE = False
 
 try:
-    from clip_iqa import CLIPIQAEvaluator, DEFAULT_PROMPT_PAIRS
+    from clip_iqa import CLIPIQAEvaluator
     CLIP_IQA_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: CLIP-IQA evaluation not available: {e}")

@@ -58,7 +58,7 @@ from diffusers import (
 from diffusers.optimization import get_scheduler
 from diffusers.utils import check_min_version
 from diffusers.utils.import_utils import is_xformers_available
-from huggingface_hub import HfFolder, Repository, create_repo, whoami
+from huggingface_hub import HfFolder, whoami
 from PIL import Image
 from torchvision import transforms
 from tqdm.auto import tqdm
@@ -1711,39 +1711,27 @@ class SpatialDreambooth:
 
                         if self.args.apply_masked_loss:
                             instance_masks = batch["instance_masks"]
-                            print(f"[DEBUG] Original instance_masks shape: {instance_masks.shape}, dim: {instance_masks.dim()}")
-                            print(f"[DEBUG] is_multiview_batch: {is_multiview_batch}")
-                            print(f"[DEBUG] model_pred shape: {model_pred.shape}")
 
                             # Handle multi-view masks: [batch, frames, tokens, 1, 1, H, W] or [batch, tokens, 1, 1, H, W]
                             if instance_masks.dim() == 7:  # Multi-view: [batch, frames, tokens, 1, 1, H, W]
-                                print(f"[DEBUG] Using dim==7 path")
                                 # Reshape to [batch * frames, tokens, 1, 1, H, W]
                                 instance_masks = instance_masks.view(-1, *instance_masks.shape[2:])
-                                print(f"[DEBUG] After reshape: {instance_masks.shape}")
                             elif instance_masks.dim() == 6 and is_multiview_batch:  # [batch, frames, tokens, 1, H, W]
-                                print(f"[DEBUG] Using dim==6 path")
                                 # Current: [batch, frames, tokens, 1, H, W] = [1, 4, 2, 1, 256, 256]
                                 # Need: [batch*frames, tokens, 1, H, W] = [4, 2, 1, 256, 256]
                                 batch_size, num_frames = instance_masks.shape[0], instance_masks.shape[1]
                                 instance_masks = instance_masks.view(batch_size * num_frames, *instance_masks.shape[2:])
-                                print(f"[DEBUG] After reshape: {instance_masks.shape}")
-                            else:
-                                print(f"[DEBUG] No reshape applied")
 
                             # instance_masks is now [batch*frames, tokens, 1, 1, H, W] or [batch, tokens, 1, 1, H, W]
                             # Take max over tokens dimension (dim=1)
                             max_masks = torch.max(instance_masks, dim=1).values  # [batch*frames, 1, 1, H, W]
-                            print(f"[DEBUG] After max: {max_masks.shape}")
                             # Squeeze to get [batch*frames, H, W] then unsqueeze to [batch*frames, 1, H, W] for interpolation
                             max_masks = max_masks.squeeze(1).squeeze(1).unsqueeze(1)
-                            print(f"[DEBUG] After squeeze/unsqueeze: {max_masks.shape}")
 
                             latent_size = self.args.resolution // 8
                             downsampled_mask = F.interpolate(
                                 input=max_masks, size=(latent_size, latent_size)
                             )
-                            print(f"[DEBUG] downsampled_mask shape: {downsampled_mask.shape}")
                             model_pred = model_pred * downsampled_mask
                             target = target * downsampled_mask
 
@@ -1764,39 +1752,27 @@ class SpatialDreambooth:
                     else:
                         if self.args.apply_masked_loss:
                             instance_masks = batch["instance_masks"]
-                            print(f"[DEBUG] Original instance_masks shape: {instance_masks.shape}, dim: {instance_masks.dim()}")
-                            print(f"[DEBUG] is_multiview_batch: {is_multiview_batch}")
-                            print(f"[DEBUG] model_pred shape: {model_pred.shape}")
 
                             # Handle multi-view masks: [batch, frames, tokens, 1, 1, H, W] or [batch, tokens, 1, 1, H, W]
                             if instance_masks.dim() == 7:  # Multi-view: [batch, frames, tokens, 1, 1, H, W]
-                                print(f"[DEBUG] Using dim==7 path")
                                 # Reshape to [batch * frames, tokens, 1, 1, H, W]
                                 instance_masks = instance_masks.view(-1, *instance_masks.shape[2:])
-                                print(f"[DEBUG] After reshape: {instance_masks.shape}")
                             elif instance_masks.dim() == 6 and is_multiview_batch:  # [batch, frames, tokens, 1, H, W]
-                                print(f"[DEBUG] Using dim==6 path")
                                 # Current: [batch, frames, tokens, 1, H, W] = [1, 4, 2, 1, 256, 256]
                                 # Need: [batch*frames, tokens, 1, H, W] = [4, 2, 1, 256, 256]
                                 batch_size, num_frames = instance_masks.shape[0], instance_masks.shape[1]
                                 instance_masks = instance_masks.view(batch_size * num_frames, *instance_masks.shape[2:])
-                                print(f"[DEBUG] After reshape: {instance_masks.shape}")
-                            else:
-                                print(f"[DEBUG] No reshape applied")
 
                             # instance_masks is now [batch*frames, tokens, 1, 1, H, W] or [batch, tokens, 1, 1, H, W]
                             # Take max over tokens dimension (dim=1)
                             max_masks = torch.max(instance_masks, dim=1).values  # [batch*frames, 1, 1, H, W]
-                            print(f"[DEBUG] After max: {max_masks.shape}")
                             # Squeeze to get [batch*frames, H, W] then unsqueeze to [batch*frames, 1, H, W] for interpolation
                             max_masks = max_masks.squeeze(1).squeeze(1).unsqueeze(1)
-                            print(f"[DEBUG] After squeeze/unsqueeze: {max_masks.shape}")
 
                             latent_size = self.args.resolution // 8
                             downsampled_mask = F.interpolate(
                                 input=max_masks, size=(latent_size, latent_size)
                             )
-                            print(f"[DEBUG] downsampled_mask shape: {downsampled_mask.shape}")
                             model_pred = model_pred * downsampled_mask
                             target = target * downsampled_mask
                         loss = F.mse_loss(

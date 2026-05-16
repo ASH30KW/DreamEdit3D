@@ -19,13 +19,10 @@ import os
 import torch
 import numpy as np
 from PIL import Image
-from diffusers import DiffusionPipeline, DDIMScheduler
-
 # MVDream imports
 from mvdream.camera_utils import get_camera, get_camera_from_lists
 from mvdream.ldm.models.diffusion.ddim import DDIMSampler
 from mvdream.model_zoo import build_model
-from omegaconf import OmegaConf
 
 
 class BreakASceneInference:
