@@ -1,3 +1,7 @@
 [submodule "segment-anything"]
 	path = segment-anything
 	url = https://github.com/facebookresearch/segment-anything.git
+[submodule "snap_gtr"]
+	path = snap_gtr
+	url = https://github.com/ASH30KW/snap_gtr.git
+	branch = dreamedit3d

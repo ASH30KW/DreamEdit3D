@@ -23,8 +23,9 @@ gradio_app.py          Gradio UI components used by the main app
 render_glb_blender.py  Headless Blender renderer for .glb assets
 ptp_utils.py           Prompt-to-prompt attention utilities
 mvdream/               MVDream multi-view diffusion
-snap_gtr/              GTR image-to-3D (vendored, locally modified for
-                       transparent/RGBA mesh rendering)
+snap_gtr/              GTR image-to-3D (git submodule of
+                       ASH30KW/snap_gtr@dreamedit3d, our fork with
+                       transparent/RGBA rendering support)
 segment-anything/      SAM (git submodule of facebookresearch/segment-anything)
 mask/                  SAM-based masking helpers
 utils/                 Shared utilities (incl. GPT-4V auto-naming)
@@ -174,7 +175,7 @@ DreamEdit3D builds on, and includes source from, these projects:
 
 - [Break-A-Scene](https://github.com/google/break-a-scene) (Avrahami et al., SIGGRAPH Asia 2023) — concept extraction
 - [MVDream](https://github.com/bytedance/MVDream) — multi-view diffusion
-- [GTR / snap_gtr](https://github.com/snap-research/snap_gtr) — image-to-3D (vendored with local modifications)
+- [GTR / snap_gtr](https://github.com/snap-research/snap_gtr) — image-to-3D (git submodule of [our fork](https://github.com/ASH30KW/snap_gtr/tree/dreamedit3d) with transparent/RGBA rendering)
 - [Segment Anything](https://github.com/facebookresearch/segment-anything) — masking (git submodule)
 
 Please cite the underlying papers when using this code.
