@@ -205,9 +205,6 @@ examples/*/05_evaluation/
 # Secrets / local config
 .env
 .env.*
-!.env.example
-*.api_key
-.openai_key
 
 # Model weight binaries (download separately, see README)
 *.pth
