@@ -12,7 +12,6 @@ The end-to-end app lets you:
 2. Train per-concept textual tokens (`<asset0>`, `<asset1>`, ...).
 3. Re-render the concepts under new prompts as multi-view images via
    MVDream, then lift them to a 3D mesh with GTR.
-4. Optionally upscale the renders with Real-ESRGAN / SwinIR.
 
 ## Repository layout
 
@@ -26,7 +25,6 @@ ptp_utils.py           Prompt-to-prompt attention utilities
 mvdream/               MVDream multi-view diffusion
 snap_gtr/              GTR image-to-3D reconstruction
 segment-anything/      SAM (vendored)
-enhence_image/         Real-ESRGAN and SwinIR upscalers (vendored)
 mask/                  SAM-based masking helpers
 utils/                 Shared utilities (incl. GPT-4V auto-naming)
 examples/              Example inputs
@@ -87,8 +85,6 @@ yourself and place them as shown:
 | `sam_vit_l_0b3195.pth` *(optional)* | `mask/checkpoints/` | [SAM ViT-L](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth) |
 | `sam_vit_b_01ec64.pth` *(optional)* | `mask/checkpoints/` | [SAM ViT-B](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth) |
 | `full_checkpoint.pth` (GTR) | `snap_gtr/ckpts/` | [GTR release](https://github.com/snap-research/GTR) |
-| `RealESRGAN_x2plus.pth`, `RealESRGAN_x4plus.pth` | `enhence_image/Real-ESRGAN/weights/` | [Real-ESRGAN releases](https://github.com/xinntao/Real-ESRGAN/releases) |
-| SwinIR model zoo *(optional)* | `enhence_image/SwinIR/model_zoo/swinir/` | [SwinIR releases](https://github.com/JingyunLiang/SwinIR/releases) |
 
 ### Stable Diffusion 2.1 base
 
@@ -167,8 +163,8 @@ python inference.py \
   --size 256
 ```
 
-See `docs/` for joint multi-view training, the project-based folder
-layout, and the GPT-4V auto-naming details.
+See `docs/` for GPT-4V auto-naming and the project-based folder
+workflow.
 
 ## Acknowledgements
 
@@ -178,7 +174,6 @@ DreamEdit3D builds on, and vendors source from, these projects:
 - [MVDream](https://github.com/bytedance/MVDream) — multi-view diffusion
 - [GTR / snap_gtr](https://github.com/snap-research/GTR) — image-to-3D
 - [Segment Anything](https://github.com/facebookresearch/segment-anything) — masking
-- [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN), [SwinIR](https://github.com/JingyunLiang/SwinIR) — upscaling
 
 Please cite the underlying papers when using this code.
 

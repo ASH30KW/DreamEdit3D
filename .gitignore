@@ -195,13 +195,6 @@ projects/
 mesh_outputs/
 evaluation/
 
-# enhence_image: keep source, ignore weights and upscayl binary app
-enhence_image/upscayl/
-enhence_image/Real-ESRGAN/weights/
-enhence_image/SwinIR/model_zoo/
-enhence_image/SwinIR/results/
-enhence_image/**/__pycache__/
-
 # Secrets / local config
 .env
 .env.*
