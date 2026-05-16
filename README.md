@@ -184,6 +184,20 @@ DreamEdit3D builds on, and includes source from, these projects:
 
 Please cite the underlying papers when using this code.
 
+## Citation
+
+If you use DreamEdit3D in your work, please cite it as:
+
+```bibtex
+@misc{ai2026dreamedit3d,
+  title  = {DreamEdit3D: Text-driven Editing of 3D Assets from a Single Image},
+  author = {Ai, Jinxin},
+  year   = {2026},
+  howpublished = {\url{https://www.jinxinai.org/dreamedit3d/}},
+  note   = {Code: \url{https://github.com/ASH30KW/DreamEdit3D}}
+}
+```
+
 ## License
 
 Apache 2.0 — see [LICENSE](LICENSE). Vendored third-party code retains
