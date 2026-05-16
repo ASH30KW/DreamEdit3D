@@ -883,7 +883,7 @@ def t2i(model, image_size, prompt, uc, sampler, step=20, scale=7.5, batch_size=8
     return list(x_sample.astype(np.uint8))
 
 
-class SpatialDreambooth:
+class DreamEdit3DTrainer:
     def __init__(self):
         self.args = parse_args()
         self.main()
@@ -2204,4 +2204,4 @@ class P2PCrossAttnProcessor:
 
 
 if __name__ == "__main__":
-    SpatialDreambooth()
+    DreamEdit3DTrainer()

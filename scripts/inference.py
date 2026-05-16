@@ -32,7 +32,7 @@ from mvdream.ldm.models.diffusion.ddim import DDIMSampler
 from mvdream.model_zoo import build_model
 
 
-class BreakASceneInference:
+class DreamEdit3DInference:
     def __init__(self):
         self._parse_args()
         self._load_pipeline()
@@ -238,7 +238,7 @@ class BreakASceneInference:
 
 
 if __name__ == "__main__":
-    break_a_scene_inference = BreakASceneInference()
-    break_a_scene_inference.infer_and_save(
-        prompts=[break_a_scene_inference.args.prompt]
+    inference = DreamEdit3DInference()
+    inference.infer_and_save(
+        prompts=[inference.args.prompt]
     )
