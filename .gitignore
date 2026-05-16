@@ -190,9 +190,18 @@ mask/masked_output
 generated_multiview/
 temp_gtr_gradio/
 snap_gtr/temp_gradio/
-projects/
 mesh_outputs/
 evaluation/
+
+# Per-example pipeline outputs (live under examples/<name>/...)
+# Only 01_sam_masks/ and meta.json are tracked as the input reference.
+examples/*/02_train/
+examples/*/02_trained_model/
+examples/*/03_multiview_images/
+examples/*/04_gtr_3d/
+examples/*/04_gtr_prepared/
+examples/*/05_evaluation/
+examples/*/separated_views/
 
 # Secrets / local config
 .env

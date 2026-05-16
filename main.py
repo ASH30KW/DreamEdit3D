@@ -737,7 +737,7 @@ class ProjectManager:
 
     def __init__(self, base_dir):
         self.base_dir = Path(base_dir)
-        self.projects_dir = self.base_dir / "projects"
+        self.projects_dir = self.base_dir / "examples"
         self.projects_dir.mkdir(exist_ok=True)
 
     def create_project(self, project_name=None):
@@ -998,7 +998,7 @@ class MeshVisualizer:
             if mesh is None:
                 return f"<div style='color:red; text-align:center; padding:50px;'>⚠️ {load_msg}</div>", load_msg
 
-            # Save GLB in the same directory as the mesh (e.g., projects/project_xxx/04_gtr_3d/...)
+            # Save GLB in the same directory as the mesh (e.g., examples/<name>/04_gtr_3d/...)
             mesh_path_obj = Path(mesh_path)
             output_dir = mesh_path_obj.parent
 
@@ -1026,7 +1026,7 @@ class MeshVisualizer:
 
             # Create iframe HTML that references the static file
             # Path relative to projects directory (e.g., "project_xxx/04_gtr_3d/generated_multiview_xxx/mesh_xxx.html")
-            projects_dir = Path.cwd() / "projects"
+            projects_dir = Path.cwd() / "examples"
             relative_path = html_path.relative_to(projects_dir)
             iframe_html = f'<iframe src="/mesh_static/{relative_path}" width="100%" height="820px" style="border:none; border-radius: 8px;"></iframe>'
 
@@ -1107,7 +1107,7 @@ def get_available_render_objects():
 
 def get_projects_with_renders():
     """Get list of projects that have a 00_renders folder with images"""
-    projects_dir = Path(__file__).parent / "projects"
+    projects_dir = Path(__file__).parent / "examples"
     if not projects_dir.exists():
         return []
 
@@ -1131,7 +1131,7 @@ def load_images_from_project_renders(project_name):
     """
     import glob
     images = {}
-    renders_dir = Path(__file__).parent / "projects" / project_name / "00_renders"
+    renders_dir = Path(__file__).parent / "examples" / project_name / "00_renders"
 
     if not renders_dir.exists():
         print(f"Warning: Project renders directory not found: {renders_dir}")
@@ -3471,7 +3471,7 @@ def create_interface():
                         f.write(html_content)
 
                     # Create iframe HTML using /mesh_static/ path with cache-busting parameter
-                    projects_dir = Path.cwd() / "projects"
+                    projects_dir = Path.cwd() / "examples"
                     relative_path = html_path.relative_to(projects_dir)
                     iframe_html = f'<iframe src="/mesh_static/{relative_path}?v={timestamp}" width="100%" height="300px" style="border:none; border-radius: 8px;"></iframe>'
 
@@ -8904,7 +8904,7 @@ if __name__ == "__main__":
 
     # Mount static file server for mesh outputs (serves from projects directory)
     from fastapi.staticfiles import StaticFiles
-    app.mount("/mesh_static", StaticFiles(directory=str(base_dir / "projects"), html=True), name="mesh_static")
+    app.mount("/mesh_static", StaticFiles(directory=str(base_dir / "examples"), html=True), name="mesh_static")
 
     @app.get("/health")
     def health_check():
@@ -8916,7 +8916,7 @@ if __name__ == "__main__":
     # Launch with Uvicorn
     print("🚀 Launching server with FastAPI + Gradio...")
     print(f"📁 Project directory: {project_manager.projects_dir}")
-    print("📍 Mesh GLB/HTML files saved to: projects/*/04_gtr_3d/*/")
+    print("📍 Mesh GLB/HTML files saved to: examples/*/04_gtr_3d/*/")
     print("🌐 Access at: http://0.0.0.0:7860")
 
     uvicorn.run(

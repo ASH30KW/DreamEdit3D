@@ -159,7 +159,7 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python scripts/train.py \
   --initializer_tokens person \
   --phase1_train_steps 400 \
   --phase2_train_steps 400 \
-  --output_dir projects/character/02_train \
+  --output_dir examples/character/02_train \
   --no_prior_preservation \
   --use_8bit_adam \
   --set_grads_to_none \
@@ -176,9 +176,9 @@ Verified end-to-end on an RTX 3090 with a reduced 50+50-step run
 
 ```bash
 python scripts/inference.py \
-  --model_path projects/character/02_train \
+  --model_path examples/character/02_train \
   --prompt "a photo of <asset0> smile with teeth" \
-  --output_path projects/character/03_inference.jpg \
+  --output_path examples/character/03_inference.jpg \
   --num_frames 4 \
   --size 256
 ```
