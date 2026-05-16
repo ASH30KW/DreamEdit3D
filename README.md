@@ -16,34 +16,32 @@ Pipeline: SAM-based per-view object segmentation → multi-view textual
 inversion + fine-tuning of MVDream (Break-A-Scene-style training) →
 multi-view image generation → GTR lifts the views to a textured 3D mesh.
 
-The end-to-end app lets you:
+The end-to-end CLI takes a 4-view segmented example folder and a text
+prompt, and produces a textured 3D mesh:
 
-1. Upload an image and segment it into concepts with SAM (optionally
-   auto-named with GPT-4V).
-2. Train a textual token (`<asset0>`) that represents the object.
-3. Re-render the concepts under new prompts as multi-view images via
-   MVDream, then lift them to a 3D mesh with GTR.
+1. Train a textual token (`<asset0>`) that represents the input object.
+2. Sample a multi-view-consistent image under the new edit prompt.
+3. Lift the multi-view image to a textured 3D mesh via GTR.
 
 ## Repository layout
 
 ```
-main.py                       Gradio application (entry point — only root .py)
+main.py                       End-to-end CLI (the only root .py)
 scripts/
-├── train.py                  Per-view textual-inversion training (subprocess)
-├── inference.py              Multi-view image sampler from trained MVDream (subprocess)
-└── render_glb_blender.py     Headless Blender renderer for .glb assets (Blender subprocess)
+├── train.py                  Multi-view textual-inversion training
+├── inference.py              Multi-view image sampler from trained MVDream
+└── render_glb_blender.py     Headless Blender renderer for .glb assets
 utils/
-├── pipeline.py               DreamEdit3DApp orchestration class used by main.py
-├── gpt_object_detector.py    GPT-4V auto-naming of mask concepts
-├── unified_renderer.py       Multi-view render utilities
-└── ptp_utils.py              Image-grid helpers + attention-store for training
+├── ptp_utils.py              Image-grid + attention-store helpers used during training
+├── gpt_object_detector.py    GPT-4V auto-naming of mask concepts (helper)
+└── unified_renderer.py       Multi-view render utilities
 mvdream/                      MVDream multi-view diffusion (vendored)
 snap_gtr/                     GTR image-to-3D (git submodule of
                               ASH30KW/snap_gtr@dreamedit3d, our fork with
                               transparent/RGBA rendering support)
 segment-anything/             SAM (git submodule of facebookresearch/segment-anything)
 mask/                         SAM checkpoints (runtime, gitignored)
-examples/                     Example inputs
+examples/                     Per-example inputs + (gitignored) runtime outputs
 ```
 
 ## Installation
@@ -122,66 +120,50 @@ public mirror via `--pretrained_model_name_or_path`:
 If you have an existing local SD2.1 pipeline dump, point at that path
 instead.
 
-## Configuration
-
-The Gradio app uses GPT-4V for automatic concept naming. Set your key
-before launching:
-
-```bash
-export OPENAI_API_KEY="sk-..."
-# or copy .env.example to .env and edit
-```
-
-If the key is not set, auto-naming is disabled but the rest of the
-pipeline still works.
-
 ## Usage
 
-### Launch the app
+`main.py` runs the full pipeline end-to-end. The minimum invocation:
 
 ```bash
-python main.py
+python main.py \
+  --example_dir examples/character \
+  --prompt "a photo of <asset0> smile with teeth"
 ```
 
-Then open the URL Gradio prints (default `http://localhost:7860`).
+The example dir must contain `01_sam_masks/view_1/img.jpg` + `mask0.png`,
+and one such pair per view (`view_1`, `view_2`, …). See
+`examples/character/` for a reference. Outputs land in the same dir:
 
-### CLI: train a single concept (4-view)
-
-The `instance_data_dir` should contain `view_1/`, `view_2/`, ...,
-`view_N/` subdirectories, each with `img.jpg` and per-asset mask files
-(`mask0.png`, `mask1.png`, ...).
-
-```bash
-PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python scripts/train.py \
-  --pretrained_model_name_or_path sd-research/stable-diffusion-2-1-base \
-  --instance_data_dir examples/character/01_sam_masks \
-  --num_of_assets 1 \
-  --initializer_tokens person \
-  --phase1_train_steps 400 \
-  --phase2_train_steps 400 \
-  --output_dir examples/character/02_train \
-  --no_prior_preservation \
-  --use_8bit_adam \
-  --set_grads_to_none \
-  --resolution 256 \
-  --size 128 \
-  --num_frames 4 \
-  --mvdream_training_mode 2d
+```
+examples/character/
+├── 01_sam_masks/                  (input, tracked in git)
+├── meta.json                      (input, tracked)
+├── 02_train/mvdream_model.pth     ← Stage 1 output
+├── 03_multiview_images/result.jpg ← Stage 2 output
+├── 04_gtr_prepared/rgb_*.png      ← Stage 3 intermediate
+└── 04_gtr_3d/mesh.{glb,obj}       ← Stage 3 final output
 ```
 
-Verified end-to-end on an RTX 3090 with a reduced 50+50-step run
-(~26 s training, ~3 s inference); use 400+400 for production quality.
+### Options
 
-### CLI: inference
+| Flag | Default | Meaning |
+| --- | --- | --- |
+| `--initializer_token` | `object` | word loosely describing the object (used to init `<asset0>`) |
+| `--phase1_steps` / `--phase2_steps` | 400 / 400 | training steps per phase (use 50/50 for a quick smoke test) |
+| `--resolution` / `--size` | 256 / 256 | training resolution |
+| `--num_frames` | 4 | number of views (set to match your `01_sam_masks/view_*` count) |
+| `--seed` | 23 | RNG seed for training + inference |
+| `--pretrained_model_name_or_path` | `sd-research/stable-diffusion-2-1-base` | HF model id or local path (see note below) |
+| `--skip_train` / `--skip_inference` / `--skip_gtr` | off | re-use an earlier stage's output |
 
-```bash
-python scripts/inference.py \
-  --model_path examples/character/02_train \
-  --prompt "a photo of <asset0> smile with teeth" \
-  --output_path examples/character/03_inference.jpg \
-  --num_frames 4 \
-  --size 256
-```
+### Stable Diffusion 2.1 base
+
+The training and inference scripts need Stable Diffusion 2.1 base from
+HuggingFace. Stability AI removed the original
+`stabilityai/stable-diffusion-2-1-base` repo, so `main.py` defaults to
+the public mirror `sd-research/stable-diffusion-2-1-base`. If you have
+a local SD2.1 pipeline dump, pass its path with
+`--pretrained_model_name_or_path`.
 
 ## Acknowledgements
 
