@@ -160,13 +160,9 @@ Running the command above on `examples/character` (text_input
 
 ![Multi-view sample](assets/results/character_smile_4views.jpg)
 
-**Stage 3 output — GTR NeRF render of the lifted 3D representation:**
-
-![NeRF render](assets/results/character_smile_nerf.gif)
-
-The exported textured mesh (`mesh.glb`, ~4.4 MB) and `mesh.obj`
-(~12 MB) land in `examples/character/04_gtr_3d/` after the run; the
-GIF above is just the volumetric preview that GTR writes alongside.
+The exported textured mesh lands in
+`examples/character/04_gtr_3d/mesh.glb` (~4.4 MB) and `mesh.obj`
+(~12 MB) after the run.
 
 ### Options
 
