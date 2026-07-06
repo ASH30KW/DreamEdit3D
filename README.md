@@ -1,11 +1,15 @@
 # DreamEdit3D: Personalization of Multi-View Diffusion Models for 3D Editing
 
+**ECCV 2026**
+
 **Jinxin Ai · Matthias Nießner · Ziya Erkoç**
 Technical University of Munich
 
 [Project page](https://www.jinxinai.org/dreamedit3d/) &nbsp;·&nbsp; [Video](https://youtu.be/PHyvbyREIOw)
 
 ![DreamEdit3D teaser](assets/teaser.jpg)
+
+Official implementation of the ECCV 2026 paper.
 
 DreamEdit3D produces multi-view-consistent edits of 3D objects guided by
 natural language. We personalize a multi-view diffusion model to preserve
@@ -181,11 +185,11 @@ Please cite the underlying papers when using this code.
 If you use DreamEdit3D in your work, please cite it as:
 
 ```bibtex
-@article{ai2026dreamedit3d,
+@inproceedings{ai2026dreamedit3d,
   title     = {DreamEdit3D: Personalization of Multi-View
                Diffusion Models for 3D Editing},
   author    = {Ai, Jinxin and Nie{\ss}ner, Matthias and Erko\c{c}, Ziya},
-  journal   = {arXiv preprint},
+  booktitle = {European Conference on Computer Vision (ECCV)},
   year      = {2026}
 }
 ```
