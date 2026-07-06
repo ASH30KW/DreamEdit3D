@@ -1,6 +1,6 @@
 # DreamEdit3D: Personalization of Multi-View Diffusion Models for 3D Editing
 
-**ECCV 2026**
+**Accepted to ECCV 2026 🎉**
 
 **Jinxin Ai · Matthias Nießner · Ziya Erkoç**
 Technical University of Munich
