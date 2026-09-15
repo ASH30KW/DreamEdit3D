@@ -40,8 +40,7 @@ mvdream/                      MVDream multi-view diffusion (vendored)
 snap_gtr/                     GTR image-to-3D (git submodule of
                               ASH30KW/snap_gtr@dreamedit3d, our fork with
                               transparent/RGBA rendering support)
-segment-anything/             SAM (git submodule of facebookresearch/segment-anything)
-mask/                         SAM checkpoints (runtime, gitignored)
+segment-anything/             SAM (git submodule; only needed to make masks for new objects)
 examples/                     Per-example inputs + (gitignored) runtime outputs
 ```
 
@@ -50,7 +49,8 @@ examples/                     Per-example inputs + (gitignored) runtime outputs
 Requires CUDA-capable GPU (tested on 48GB VRAM) and Linux.
 Tested on Linux with Python 3.10 and CUDA 12.8.
 
-Clone with submodules so the `segment-anything/` submodule is populated:
+Clone with submodules so `snap_gtr/` (required) and `segment-anything/`
+(optional, see below) are populated:
 
 ```bash
 git clone --recurse-submodules https://github.com/ASH30KW/DreamEdit3D.git
@@ -58,7 +58,7 @@ git clone --recurse-submodules https://github.com/ASH30KW/DreamEdit3D.git
 git submodule update --init --recursive
 ```
 
-### Option A — conda + pip (recommended)
+### conda + pip
 
 ```bash
 conda create -n DreamEdit3D python=3.10 -y
@@ -86,40 +86,21 @@ pip install --no-build-isolation \
 Adjust the `+cu128` markers and `--extra-index-url` if you target a
 different CUDA version.
 
-### Option B — clone an existing conda env
-
-If you already have the original `sam-bas-gtr` env on the same machine:
-
-```bash
-conda create --clone sam-bas-gtr --name DreamEdit3D
-```
-
 ## Required model weights
 
-The repository ships **source only** — download these checkpoints
-yourself and place them as shown:
+The repository ships **source only**. One checkpoint must be downloaded
+by hand; the rest are fetched from HuggingFace on first run.
 
-| File | Location | Source |
-| --- | --- | --- |
-| `sd-v2.1-base-4view.pt` | `models/` | [MVDream release](https://github.com/bytedance/MVDream) |
-| `sam_vit_h_4b8939.pth` | `mask/checkpoints/` | [SAM ViT-H](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) |
-| `sam_vit_l_0b3195.pth` *(optional)* | `mask/checkpoints/` | [SAM ViT-L](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth) |
-| `sam_vit_b_01ec64.pth` *(optional)* | `mask/checkpoints/` | [SAM ViT-B](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth) |
-| `full_checkpoint.pth` (GTR) | `snap_gtr/ckpts/` | [GTR release](https://github.com/snap-research/snap_gtr) |
+| Weight | How to get it |
+| --- | --- |
+| GTR `full_checkpoint.pth` | Download from the [GTR release](https://github.com/snap-research/snap_gtr) and place it at `snap_gtr/ckpts/full_checkpoint.pth` |
+| MVDream `sd-v2.1-base-4view.pt` | Auto-downloaded from [`MVDream/MVDream`](https://huggingface.co/MVDream/MVDream) into the HF cache |
+| Stable Diffusion 2.1 base | Auto-downloaded from the public mirror `sd-research/stable-diffusion-2-1-base` (Stability AI removed the original `stabilityai/stable-diffusion-2-1-base` repo). Pass a local pipeline dump via `--pretrained_model_name_or_path` if you have one |
 
-### Stable Diffusion 2.1 base
-
-The training and inference scripts also need Stable Diffusion 2.1 base,
-which is fetched from HuggingFace on first run. Stability AI removed
-the original `stabilityai/stable-diffusion-2-1-base` repo, so pass a
-public mirror via `--pretrained_model_name_or_path`:
-
-```bash
---pretrained_model_name_or_path sd-research/stable-diffusion-2-1-base
-```
-
-If you have an existing local SD2.1 pipeline dump, point at that path
-instead.
+The end-to-end CLI never loads SAM. The `segment-anything/` submodule
+and its [ViT-H checkpoint](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)
+are only needed if you want to produce `mask0.png` files for your own
+objects; any other segmentation tool that emits a binary PNG works too.
 
 ## Usage
 
@@ -180,17 +161,19 @@ examples/character/
 | `--resolution` / `--size` | 256 / 256 | training resolution |
 | `--num_frames` | 4 | number of views (set to match your `01_sam_masks/view_*` count) |
 | `--seed` | 23 | RNG seed for training + inference |
-| `--pretrained_model_name_or_path` | `sd-research/stable-diffusion-2-1-base` | HF model id or local path (see note below) |
+| `--pretrained_model_name_or_path` | `sd-research/stable-diffusion-2-1-base` | HF model id or local path (see [Required model weights](#required-model-weights)) |
 | `--skip_train` / `--skip_inference` / `--skip_gtr` | off | re-use an earlier stage's output |
 
-### Stable Diffusion 2.1 base
+### Notes on the GTR stage
 
-The training and inference scripts need Stable Diffusion 2.1 base from
-HuggingFace. Stability AI removed the original
-`stabilityai/stable-diffusion-2-1-base` repo, so `main.py` defaults to
-the public mirror `sd-research/stable-diffusion-2-1-base`. If you have
-a local SD2.1 pipeline dump, pass its path with
-`--pretrained_model_name_or_path`.
+- `main.py` compiles nvdiffrast's CUDA extension for the GPU it finds
+  (`torch.cuda.get_device_capability()`), so it works on Ampere, Ada
+  and Hopper cards alike.
+- When run inside a conda env, `main.py` applies a few small fixes so
+  that JIT build can find the conda CUDA toolkit (`CUDA_HOME`, an
+  `nvvm` symlink, a dangling `libcudart.so` link, the conda gcc). Each
+  fix is printed as it is applied. Set `DREAMEDIT3D_NO_ENV_FIX=1` to
+  skip them and manage the toolchain yourself.
 
 ## Acknowledgements
 
@@ -220,4 +203,8 @@ If you use DreamEdit3D in your work, please cite it as:
 ## License
 
 Apache 2.0 — see [LICENSE](LICENSE). Vendored third-party code retains
-its original license; see each subdirectory.
+its original license: `mvdream/` is MIT (ByteDance, see
+[`mvdream/LICENSE`](mvdream/LICENSE)), `scripts/train.py` derives from
+Break-A-Scene (Apache 2.0, Google). The `snap_gtr/` submodule is under
+the **Snap Inc. Non-Commercial License**, so the 3D-lifting stage is for
+non-commercial research use only.

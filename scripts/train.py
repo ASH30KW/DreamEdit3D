@@ -152,8 +152,9 @@ def parse_args(input_args=None):
     parser.add_argument(
         "--pretrained_model_name_or_path",
         type=str,
-        default="stabilityai/stable-diffusion-2-1-base",
-        help="Path to pretrained model or model identifier from huggingface.co/models.",
+        default="sd-research/stable-diffusion-2-1-base",
+        help="Path to pretrained model or model identifier from huggingface.co/models "
+             "(public mirror of the removed stabilityai/stable-diffusion-2-1-base).",
     )
     parser.add_argument(
         "--revision",

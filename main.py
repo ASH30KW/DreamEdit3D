@@ -46,24 +46,44 @@ def run(cmd, cwd=None, env_extra=None, label=""):
         sys.exit(f"❌ Failed (exit {r.returncode}): {' '.join(str(c) for c in cmd[:3])}")
 
 
-def fix_gtr_env():
-    """Patch the conda env so nvdiffrast can JIT-compile its CUDA extension.
+def cuda_arch_list():
+    """TORCH_CUDA_ARCH_LIST for the GPU nvdiffrast will be JIT-built for."""
+    if os.environ.get("TORCH_CUDA_ARCH_LIST"):
+        return os.environ["TORCH_CUDA_ARCH_LIST"]
+    try:
+        import torch
+        major, minor = torch.cuda.get_device_capability()
+        return f"{major}.{minor}"
+    except Exception:
+        return None  # let torch's extension builder pick
 
-    The cloned env may have:
+
+def fix_gtr_env():
+    """Return env overrides so nvdiffrast can JIT-compile its CUDA extension.
+
+    Inside a conda env with the `cuda-toolkit` package this also repairs
+    a few known layout quirks (each fix is printed as it is applied):
       - CUDA_HOME pointing at a non-existent path
       - targets/x86_64-linux/nvvm missing (cicc lives at <env>/nvvm)
       - lib/libcudart.so symlink dangling to an old version
+    Set DREAMEDIT3D_NO_ENV_FIX=1 to skip all of this.
     """
-    conda_prefix = os.environ.get("CONDA_PREFIX")
-    if not conda_prefix or not Path(conda_prefix).is_dir():
-        return {}  # not in a conda env; user is on their own
-    env_dir = Path(conda_prefix)
+    overrides = {}
+    arch = cuda_arch_list()
+    if arch:
+        overrides["TORCH_CUDA_ARCH_LIST"] = arch
 
-    overrides = {"CUDA_HOME": str(env_dir), "TORCH_CUDA_ARCH_LIST": "8.6"}
+    conda_prefix = os.environ.get("CONDA_PREFIX")
+    if os.environ.get("DREAMEDIT3D_NO_ENV_FIX") or not conda_prefix \
+            or not Path(conda_prefix).is_dir():
+        return overrides  # not in a conda env (or opted out); user is on their own
+    env_dir = Path(conda_prefix)
+    overrides["CUDA_HOME"] = str(env_dir)
 
     # nvvm/cicc layout fix
     target_nvvm = env_dir / "targets" / "x86_64-linux" / "nvvm"
     if not target_nvvm.exists() and (env_dir / "nvvm" / "bin" / "cicc").exists():
+        print(f"[env fix] symlink {target_nvvm} -> {env_dir / 'nvvm'}")
         target_nvvm.parent.mkdir(parents=True, exist_ok=True)
         target_nvvm.symlink_to(env_dir / "nvvm")
 
@@ -72,6 +92,7 @@ def fix_gtr_env():
     if libcudart.is_symlink() and not libcudart.resolve().exists():
         target = env_dir / "lib" / "libcudart.so.12"
         if target.exists():
+            print(f"[env fix] repoint dangling {libcudart} -> libcudart.so.12")
             libcudart.unlink()
             libcudart.symlink_to("libcudart.so.12")
 
