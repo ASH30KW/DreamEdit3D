@@ -134,9 +134,32 @@ python main.py \
   --initializer_token person
 ```
 
+### Bundled examples
+
+Four ready-to-run inputs ship under `examples/`. Each one is a 4-view
+object with a SAM mask per view (`01_sam_masks/view_{1..4}/{img.jpg,mask0.png}`)
+plus a `meta.json` recording the original edit:
+
+| `--example_dir` | `--initializer_token` | `--prompt` |
+| --- | --- | --- |
+| `examples/character` | `person` | `"a photo of <asset0> smile with teeth"` |
+| `examples/dog` | `dog` | `"a photo of <asset0> smile"` |
+| `examples/sofa` | `sofa` | `"a photo of <asset0> redesigned to single seat"` |
+| `examples/van` | `van` | `"a photo of <asset0> in red"` |
+
+e.g.
+
+```bash
+python main.py --example_dir examples/van --initializer_token van \
+  --prompt "a photo of <asset0> in red"
+```
+
+### Your own object
+
 The example dir must contain `01_sam_masks/view_1/img.jpg` + `mask0.png`,
-and one such pair per view (`view_1`, `view_2`, …). See
-`examples/character/` for a reference. Outputs land in the same dir:
+and one such pair per view (`view_1`, `view_2`, …). Images are 512×512
+RGB; masks are single-channel PNGs of the same size. See any of the
+bundled examples for a reference. Outputs land in the same dir:
 
 ```
 examples/character/
